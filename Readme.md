@@ -33,18 +33,18 @@ source venv/bin/activate
 3. Instalar dependencias
 pip install -r requirements.txt
 
-4. Crear archivo `.env`
-SECRET_KEY=super-secret-key
-DEBUG=True
-ALLOWED_HOSTS=*
-
-DB_NAME=petadoptiondb
-DB_USER=postgres
-DB_PASS=admins
-DB_HOST=localhost
-DB_PORT=5432
+4. Crear archivo `.env`.
+    - SECRET_KEY=super-secret-key
+    - DEBUG=True
+    - ALLOWED_HOSTS=*
+    - DB_NAME=petadoptiondb
+    - DB_USER=postgres
+    - DB_PASS=admins
+    - DB_HOST=localhost
+    - DB_PORT=5432
 
 5. Aplicar migraciones
+python manage.py makemigrations
 python manage.py migrate
 
 6. Crear superusuario
@@ -94,8 +94,8 @@ Respuesta
 
 ## Creación de variable de entorno para postman
 
-base_url: http://localhost:8000 o http://127.0.0.1:8000
-token: access_token (Obtenido anteriormente)
+ - base_url: http://localhost:8000 o http://127.0.0.1:8000
+ - token: access_token (Obtenido anteriormente)
 
 Crear usuario (admin)
 
