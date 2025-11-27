@@ -100,7 +100,9 @@ Respuesta
 Crear usuario (admin)
 
 POST /api/admin/users/
+
 Authorization: Bearer {{token}}
+
 {
   "username": "empleado1",
   "email": "empleado1@example.com",
