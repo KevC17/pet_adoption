@@ -1,0 +1,67 @@
+# ======================================
+# Python
+# ======================================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.pkl
+
+# Virtual environments
+env/
+venv/
+.env/
+.venv/
+
+# ======================================
+# Django
+# ======================================
+# SQLite 
+db.sqlite3
+
+# Django logs
+*.log
+
+# Django static & media
+staticfiles/
+static/
+media/
+
+# ======================================
+# Environment variables
+# ======================================
+*.env
+.env.local
+.env.production
+.env.dev
+.env.test
+
+# ======================================
+# IDE / Editor
+# ======================================
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# ======================================
+# Byte-compiled / migraciones cache
+# ======================================
+*.egg
+*.egg-info/
+dist/
+build/
+
+# ======================================
+# Sistema operativo
+# ======================================
+.DS_Store
+Thumbs.db
+
+# ======================================
+# Docker 
+# ======================================
+docker-compose.override.yml
+*.pid

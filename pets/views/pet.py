@@ -1,0 +1,17 @@
+from rest_framework import viewsets, permissions, filters
+from pets.models.pet import Pet
+from pets.serializers.pet import PetSerializer
+
+class IsAdminOrReadOnly(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user.is_staff
+
+class PetViewSet(viewsets.ModelViewSet):
+    queryset = Pet.objects.all().order_by('id')
+    serializer_class = PetSerializer
+    permission_classes = (IsAdminOrReadOnly,)
+    filter_backends = (filters.SearchFilter, filters.OrderingFilter)
+    search_fields = ('name', 'species', 'breed', 'gender', 'status')
+    ordering_fields = ('name', 'age', 'admission_date')
