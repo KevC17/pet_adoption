@@ -1,12 +1,10 @@
 name: Deploy Django to VPS
 
-
 on:
   push:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-
 
 jobs:
   test:
@@ -40,8 +38,8 @@ jobs:
    
     - name: Run tests
       env:
-        DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
-        SECRET_KEY: test-secret-key
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: |
         python manage.py test
 
@@ -59,8 +57,6 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-       
-        # Añadir el host a known_hosts
         ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
    
     - name: Deploy to VPS
@@ -70,8 +66,9 @@ jobs:
         DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         PROJECT_PATH: ${{ secrets.PROJECT_PATH }}
         VENV_PATH: ${{ secrets.VENV_PATH }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: |
-        # Comandos SSH para desplegar
         ssh $VPS_USER@$VPS_HOST "
           set -e
          
@@ -98,4 +95,3 @@ jobs:
          
           echo '✅ Despliegue completado'
         "
-
