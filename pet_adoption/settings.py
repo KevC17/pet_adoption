@@ -30,7 +30,7 @@ SECRET_KEY = 'django-insecure-mqzf1d2mzw@n6mi&8!@nk31t@&omd)0a(%e=^82rd81%bbtyy#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['172.183.107.189', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['172.183.107.189', 'localhost', '127.0.0.1','clinical-adoption-api.desarrollo-software.xyz']
 
 
 # Application definition
