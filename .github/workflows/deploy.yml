@@ -15,12 +15,10 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.12.3'
-    
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-    
     - name: Run tests
       env:
         SECRET_KEY: "test-key-github-actions"
@@ -31,12 +29,6 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-    env:
-      VPS_HOST: ${{ secrets.VPS_HOST }}
-      VPS_USER: ${{ secrets.VPS_USERNAME }}
-      PROJECT_PATH: ${{ secrets.PROJECT_PATH }}
-      VENV_PATH: ${{ secrets.VENV_PATH }}
-
     steps:
     - uses: actions/checkout@v4
    
@@ -49,12 +41,12 @@ jobs:
    
     - name: Deploy to VPS
       run: |
-        ssh $VPS_USER@$VPS_HOST "
+        ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_HOST }} "
           set -e
-          cd $PROJECT_PATH
+          cd ${{ secrets.PROJECT_PATH }}
           git fetch origin
           git reset --hard origin/main
-          source $VENV_PATH/bin/activate
+          source ${{ secrets.VENV_PATH }}/bin/activate
           pip install -r requirements.txt
           python manage.py migrate --noinput
           python manage.py collectstatic --noinput --clear
