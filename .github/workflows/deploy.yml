@@ -32,6 +32,12 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+
+    env:
+      VPS_HOST: ${{ secrets.VPS_HOST }}
+      VPS_USER: ${{ secrets.VPS_USERNAME }}
+      PROJECT_PATH: ${{ secrets.PROJECT_PATH }}
+      VENV_PATH: ${{ secrets.VENV_PATH }}
    
     steps:
     - uses: actions/checkout@v4
@@ -41,17 +47,9 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+        ssh-keyscan -H $VPS_HOST >> ~/.ssh/known_hosts
    
     - name: Deploy to VPS
-      env:
-        VPS_HOST: ${{ secrets.VPS_HOST }}
-        VPS_USER: ${{ secrets.VPS_USERNAME }}
-        DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
-        PROJECT_PATH: ${{ secrets.PROJECT_PATH }}
-        VENV_PATH: ${{ secrets.VENV_PATH }}
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
       run: |
         ssh $VPS_USER@$VPS_HOST "
           set -e
@@ -74,8 +72,8 @@ jobs:
           python manage.py collectstatic --noinput --clear
          
           echo '6. Reiniciando servicios...'
-          systemctl restart gunicorn || true
-          systemctl restart nginx || true
+          systemctl sudo restart gunicorn || true
+          systemctl sudo restart nginx || true
          
           echo '✅ Despliegue completado'
         "
