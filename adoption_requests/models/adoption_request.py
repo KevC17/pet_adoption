@@ -3,10 +3,15 @@ from django.contrib.auth.models import User
 from pets.models.pet import Pet
 
 class AdoptionRequest(models.Model):
+    class Status(models.TextChoices):
+        PENDING = 'PENDING', 'Pendiente'
+        APPROVED = 'APPROVED', 'Aprobada'
+        REJECTED = 'REJECTED', 'Rechazada'
+        CANCELLED = 'CANCELLED', 'Cancelada'
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='adoption_requests')
     pet = models.ForeignKey(Pet, on_delete=models.CASCADE, related_name='adoption_requests')
     request_date = models.DateField(auto_now_add=True)
-    status = models.CharField(max_length=20)
+    status = models.CharField(max_length=20,choices=Status.choices,default=Status.PENDING)
     notes = models.TextField(blank=True)
 
     class Meta:

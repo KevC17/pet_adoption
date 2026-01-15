@@ -22,3 +22,8 @@ class AdoptionRequestViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+    def perform_update(self, serializer):
+            if 'status' in serializer.validated_data and not self.request.user.is_staff:
+                raise serializers.ValidationError("No tienes permiso para cambiar el estado de la solicitud.")
+            serializer.save()        
