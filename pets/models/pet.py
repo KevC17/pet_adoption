@@ -9,6 +9,7 @@ class Pet(models.Model):
     status = models.CharField(max_length=20)
     shelter = models.ForeignKey('shelters.Shelter', on_delete=models.CASCADE)
     admission_date = models.DateField()
+    photo = models.ImageField(upload_to='pets/',null=True,blank=True)
 
     class Meta:
         ordering = ['id']
