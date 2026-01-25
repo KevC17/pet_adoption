@@ -16,3 +16,15 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    # Si el usuario se acaba de crear...
+    if created:
+        # ...creamos el perfil usando la clase definida arriba
+        UserProfile.objects.get_or_create(user=instance)
