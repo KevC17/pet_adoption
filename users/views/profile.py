@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from users.models import UserProfile
-from users.serializers import UserProfileSerializer
+from users.serializers.user_profile import UserProfileSerializer
 
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
