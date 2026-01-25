@@ -59,13 +59,14 @@ INSTALLED_APPS = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-]
-
 CORS_ALLOW_CREDENTIALS = True
+
+cors_origins = os.getenv("CORS_ALLOWED_ORIGINS")
+
+if cors_origins:
+    CORS_ALLOWED_ORIGINS = cors_origins.split(",")
+else:
+    CORS_ALLOWED_ORIGINS = []
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
