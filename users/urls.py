@@ -11,8 +11,8 @@ router.register(r'admin/users', UserAdminViewSet, basename='admin-users')
 
 urlpatterns = [
     path('auth/register/', RegisterView.as_view()),
-    path('me/profile/', UserProfileView.as_view()),
     path('auth/login/', CustomTokenObtainPairView.as_view()),
     path('auth/refresh/', TokenRefreshView.as_view()),
+    path('me/profile/', UserProfileView.as_view(), name='user-profile'),
     path('', include(router.urls)),
 ]
