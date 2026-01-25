@@ -1,19 +1,21 @@
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from users.models import UserProfile
+from users.models.user_profile import UserProfile
 from users.serializers.user_profile import UserProfileSerializer
 
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        serializer = UserProfileSerializer(request.user.profile)
+        profile, created = UserProfile.objects.get_or_create(user=request.user)
+        serializer = UserProfileSerializer(profile)
         return Response(serializer.data)
 
     def put(self, request):
+        profile, created = UserProfile.objects.get_or_create(user=request.user)
         serializer = UserProfileSerializer(
-            request.user.profile,
+            profile,
             data=request.data,
             partial=True
         )
