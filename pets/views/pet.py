@@ -2,6 +2,7 @@ from rest_framework import viewsets, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from pets.models.pet import Pet
 from pets.serializers.pet import PetSerializer
+from pets.filters import PetFilter  # NUEVA LÍNEA
 from rest_framework.parsers import MultiPartParser, FormParser
 
 class IsAdminOrReadOnly(permissions.BasePermission):
@@ -11,7 +12,7 @@ class IsAdminOrReadOnly(permissions.BasePermission):
         return request.user.is_staff
 
 class PetViewSet(viewsets.ModelViewSet):
-    queryset = Pet.objects.all()  # Define el queryset base aquí
+    queryset = Pet.objects.all()
     serializer_class = PetSerializer
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (
@@ -19,7 +20,7 @@ class PetViewSet(viewsets.ModelViewSet):
         filters.SearchFilter,
         filters.OrderingFilter,
     )
-    filterset_fields = ('shelter',)
+    filterset_class = PetFilter  
     search_fields = ('name', 'species', 'breed', 'gender', 'status')
     ordering_fields = ('name', 'age', 'admission_date')
     parser_classes = (MultiPartParser, FormParser)
