@@ -27,3 +27,24 @@ class AdoptionRequestViewSet(viewsets.ModelViewSet):
             if 'status' in serializer.validated_data and not self.request.user.is_staff:
                 raise serializers.ValidationError("No tienes permiso para cambiar el estado de la solicitud.")
             serializer.save()        
+
+    @action(detail=False, methods=['get'], url_path='my-for-pet')
+    def my_for_pet(self, request):
+        pet_id = request.query_params.get('pet_id')
+
+        if not pet_id:
+            return Response({"detail": "pet_id es requerido"}, status=400)
+
+        adoption = AdoptionRequest.objects.filter(
+            user=request.user,
+            pet_id=pet_id
+        ).first()
+
+        if not adoption:
+            return Response({"exists": False})
+
+        serializer = self.get_serializer(adoption)
+        return Response({
+            "exists": True,
+            "adoption": serializer.data
+        })
