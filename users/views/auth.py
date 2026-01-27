@@ -9,5 +9,5 @@ class RegisterView(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
 
     def perform_create(self, serializer):
-        user = serializer.save()
-        UserProfile.objects.create(user=user)
+        serializer.save()  
+
