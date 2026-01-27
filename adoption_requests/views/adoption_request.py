@@ -1,7 +1,9 @@
-from rest_framework import viewsets, permissions, filters
+from rest_framework import viewsets, permissions, filters, serializers
+from rest_framework.decorators import action
+from rest_framework.response import Response
+
 from adoption_requests.models.adoption_request import AdoptionRequest
 from adoption_requests.serializers.adoption_request import AdoptionRequestSerializer
-from rest_framework.decorators import action
 
 class IsOwnerOrAdmin(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
