@@ -62,7 +62,7 @@ def send_welcome_email(user):
 
                 <tr>
                   <td align="center">
-                    <a href="https://puppyfamily.com"
+                    <a href="https://saavedra-pet-adoption.desarrollo-software.xyz"
                        style="background-color: #2563eb; color: #ffffff;
                               padding: 12px 24px; text-decoration: none;
                               border-radius: 6px; font-weight: bold;">
