@@ -1,6 +1,7 @@
 from rest_framework import viewsets, permissions, filters, serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework import status as http_status
 from adoption_requests.models.adoption_request import AdoptionRequest
 from adoption_requests.serializers.adoption_request import AdoptionRequestSerializer
 
@@ -25,6 +26,13 @@ class AdoptionRequestViewSet(viewsets.ModelViewSet):
         return queryset.filter(user=self.request.user)
     
     def perform_create(self, serializer):
+        pet = serializer.validated_data['pet']
+
+        if pet.status == pet.Status.ADOPTED:
+            raise serializers.ValidationError(
+                "No se puede solicitar adopción de una mascota ya adoptada."
+            )
+
         serializer.save(user=self.request.user)
     
     def perform_update(self, serializer):
@@ -51,3 +59,36 @@ class AdoptionRequestViewSet(viewsets.ModelViewSet):
             "exists": True,
             "adoption": serializer.data
         })
+    
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAdminUser])
+    def approve(self, request, pk=None):
+        adoption = self.get_object()
+        pet = adoption.pet
+
+        if adoption.status != AdoptionRequest.Status.PENDING:
+            return Response(
+                {"detail": "Solo se pueden aprobar solicitudes pendientes."},
+                status=http_status.HTTP_400_BAD_REQUEST
+            )
+
+        if pet.status == pet.Status.ADOPTED:
+            return Response(
+                {"detail": "Esta mascota ya fue adoptada."},
+                status=http_status.HTTP_400_BAD_REQUEST
+            )
+
+        adoption.status = AdoptionRequest.Status.APPROVED
+        adoption.save()
+
+        AdoptionRequest.objects.filter(
+            pet=pet
+        ).exclude(id=adoption.id).update(
+            status=AdoptionRequest.Status.REJECTED
+        )
+        pet.status = pet.Status.ADOPTED
+        pet.save()
+
+        return Response(
+            {"detail": "Adoption approved successfully"},
+            status=http_status.HTTP_200_OK
+        )

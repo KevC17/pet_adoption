@@ -13,8 +13,18 @@ class AdoptionRequestSerializer(serializers.ModelSerializer):
             'id', 'user', 'pet', 'status', 'request_date', 'notes',
             'user_name', 'user_email', 'pet_name', 'pet_species'
         ]
-        read_only_fields = ['request_date']
+        read_only_fields = ['request_date', 'user']
 
     def validate_status(self, value):
-        """Normalizar el estado a mayúsculas"""
-        return value.upper() if value else value        
+        value = value.upper()
+        valid_statuses = [
+            AdoptionRequest.Status.PENDING,
+            AdoptionRequest.Status.APPROVED,
+            AdoptionRequest.Status.REJECTED,
+            AdoptionRequest.Status.CANCELLED,
+        ]
+
+        if value not in valid_statuses:
+            raise serializers.ValidationError("Estado de adopción inválido.")
+
+        return value       

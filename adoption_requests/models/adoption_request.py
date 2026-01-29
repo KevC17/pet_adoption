@@ -14,8 +14,15 @@ class AdoptionRequest(models.Model):
     status = models.CharField(max_length=20,choices=Status.choices,default=Status.PENDING)
     notes = models.TextField(blank=True)
 
-    class Meta:
-        ordering = ['-request_date']
+class Meta:
+    ordering = ['-request_date']
+    constraints = [
+        models.UniqueConstraint(
+            fields=['user', 'pet'],
+            name='unique_adoption_request_per_user_pet'
+        )
+    ]
+
 
     def __str__(self):
         return f'Request {self.id} by {self.user.username}'
