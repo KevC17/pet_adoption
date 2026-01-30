@@ -92,3 +92,21 @@ class AdoptionRequestViewSet(viewsets.ModelViewSet):
             {"detail": "Adoption approved successfully"},
             status=http_status.HTTP_200_OK
         )
+
+    @action(detail=True, methods=['post'], permission_classes=[permissions.IsAdminUser])
+    def reject(self, request, pk=None):
+        adoption = self.get_object()
+
+        if adoption.status != AdoptionRequest.Status.PENDING:
+            return Response(
+                {"detail": "Solo se pueden rechazar solicitudes pendientes."},
+                status=http_status.HTTP_400_BAD_REQUEST
+            )
+
+        adoption.status = AdoptionRequest.Status.REJECTED
+        adoption.save()
+
+        return Response(
+            {"detail": "Adoption rejected successfully"},
+            status=http_status.HTTP_200_OK
+        )
