@@ -11,7 +11,6 @@ class AdoptionRequestSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdoptionRequest
         fields = [
-            # 🔹 Core (existentes)
             'id',
             'user',
             'pet',

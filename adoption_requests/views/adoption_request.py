@@ -30,10 +30,15 @@ class AdoptionRequestViewSet(viewsets.ModelViewSet):
 
         if pet.status == pet.Status.ADOPTED:
             raise serializers.ValidationError(
-                "No se puede solicitar adopción de una mascota ya adoptada."
+                {"pet": "No se puede solicitar adopción de una mascota ya adoptada."}
             )
 
-        serializer.save(user=self.request.user)
+        try:
+            serializer.save(user=self.request.user)
+        except IntegrityError:
+            raise serializers.ValidationError(
+                {"detail": "Ya has enviado una solicitud para esta mascota."}
+            )
     
     def perform_update(self, serializer):
         if 'status' in serializer.validated_data and not self.request.user.is_staff:
