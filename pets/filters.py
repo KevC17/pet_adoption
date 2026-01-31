@@ -7,6 +7,11 @@ class PetFilter(django_filters.FilterSet):
         lookup_expr='exact'
     )
 
+    shelter = django_filters.NumberFilter(
+        field_name='shelter_id',
+        lookup_expr='exact'
+    )
+
     class Meta:
         model = Pet
-        fields = ['status']
+        fields = ['status', 'shelter']
