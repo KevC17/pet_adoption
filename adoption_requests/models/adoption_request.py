@@ -53,6 +53,12 @@ class AdoptionRequest(models.Model):
         blank=True
     )
 
+    last_email_sent = models.CharField(
+        max_length=30,
+        null=True,
+        blank=True
+    )
+
     class Meta:
         ordering = ['-request_date']
         constraints = [

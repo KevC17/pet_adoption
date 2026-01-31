@@ -83,13 +83,17 @@ class AdoptionRequestViewSet(viewsets.ModelViewSet):
             )
 
         adoption.status = AdoptionRequest.Status.APPROVED
-        adoption.save()
+        adoption.save()  
 
-        AdoptionRequest.objects.filter(
-            pet=pet
-        ).exclude(id=adoption.id).update(
-            status=AdoptionRequest.Status.REJECTED
-        )
+        other_requests = AdoptionRequest.objects.filter(
+            pet=pet,
+            status=AdoptionRequest.Status.PENDING
+        ).exclude(id=adoption.id)
+
+        for req in other_requests:
+            req.status = AdoptionRequest.Status.REJECTED
+            req.save()  
+
         pet.status = pet.Status.ADOPTED
         pet.save()
 
