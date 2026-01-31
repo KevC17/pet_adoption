@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status as http_status
 from adoption_requests.models.adoption_request import AdoptionRequest
 from adoption_requests.serializers.adoption_request import AdoptionRequestSerializer
-
+from django.db import IntegrityError
 class IsOwnerOrAdmin(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.user.is_staff:
